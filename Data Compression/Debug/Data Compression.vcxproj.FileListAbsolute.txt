@@ -1,0 +1,2 @@
+C:\Users\ilbov\Desktop\C++\Data Compression\Debug\Data Compression.exe
+C:\Users\ilbov\Desktop\C++\Data Compression\Debug\Data Compression.pdb
