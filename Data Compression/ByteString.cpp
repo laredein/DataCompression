@@ -1,10 +1,9 @@
 #include "ByteString.h"
 using namespace std;
 
-compressor::compressor(string s)
+compressor::compressor(string traindata)
 {
-	traindata = s;
-	datasize = unsigned short int(s.size());
+	unsigned short datasize = unsigned short int(traindata.size());
 	for(int i = 0; i < 26; i++)
 	{
 		letter[i].val = static_cast<char>('a' + i);
@@ -15,8 +14,7 @@ compressor::compressor(string s)
 	double entropy=0;
 	for(int i = 0; i < 26; i++)
 	{
-		if (letter[i].count != 0)
-			entropy -= (double(letter[i].count)/double(datasize)) * log2(double(letter[i].count)/double(datasize));
+		entropy -= (max(double(letter[i].count), double(1)) / double(datasize)) * log2(max(double(letter[i].count), double(1)) / double(datasize));
 	}
 	cout << "entropy: " << entropy << endl;
 
@@ -24,6 +22,8 @@ compressor::compressor(string s)
 
 void compressor::initializeHuffmanEncoder()
 {
+	///delete root
+	priority_queue<Node*, vector<Node*>, ReverseCompare> HuffmanTree;
 	for(int i = 0; i < 26; i++)
 	{
 		letter[i].count = max(letter[i].count, unsigned short int(1));
@@ -50,6 +50,8 @@ void compressor::initializeHuffmanEncoder()
 		newnode->rightchild = rightchild;
 		HuffmanTree.push(newnode);
 	}
+	root = HuffmanTree.top();
+	HuffmanTree.pop();
 	for(int i = 0; i < 26; i++)
 	{
 		Node* cur = &letter[i];
@@ -62,11 +64,6 @@ void compressor::initializeHuffmanEncoder()
 		reverse(mapval.begin(), mapval.end());
 		decodeletters[static_cast<char>('a' + i)] = mapval;
 	}
-
-	Node* root = HuffmanTree.top();
-	HuffmanTree.pop();
-	///delete root;
-	///add tree deletion
 
 	for(int i=0; i<26; i++)
 	{
@@ -100,5 +97,27 @@ pair<vector<bitset<32>>, int> compressor::encode(string s)
 		bitarr.push_back(curbyte);
 	cout << "new string size in bytes" << " " << bitarr.size() * sizeof(bitset<32>) + sizeof(vector<bitset<32>>) << endl;
 	cout << "senseless symbols: " << (32 - j) % 32 << endl;
-	return make_pair(bitarr, j);
+	return make_pair(bitarr, (32 - j) % 32);
+}
+
+string compressor::decode(pair<vector<bitset<32>>, int> text)
+{
+	string s;
+	Node *curnode = root;
+	
+	for(int i = 0; i < text.first.size() * 32 - text.second; i++)
+	{
+		bool b = text.first[i/32][i%32];
+		if (b)
+			curnode = curnode->leftchild;
+		else 
+			curnode = curnode->rightchild;
+		if (curnode->val != '/')
+		{
+			s += curnode->val;
+			curnode = root;
+		}
+	}
+	cout << s << endl;
+	return s;
 }

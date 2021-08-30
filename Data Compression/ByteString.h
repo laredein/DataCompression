@@ -16,15 +16,14 @@ using namespace std;
 struct compressor
 {
 	private:
-		priority_queue<Node*, vector<Node*>, ReverseCompare> HuffmanTree;
 		Node *letter = new Node[26];
 		unordered_map<char, vector<bool>> decodeletters;
-		string traindata;
-		unsigned short int datasize;
+		Node* root = new Node;
 	public:
 		compressor(string s);
 		void initializeHuffmanEncoder();
 		pair<vector<bitset<32>>, int> encode(string s);
+		string decode(pair<vector<bitset<32>>, int> text);
 
 
 };

@@ -9,6 +9,7 @@ int main()
     ///showTime();
     compressor test("abbccdddeeeeeeeeeeee");
     test.initializeHuffmanEncoder();
-    test.encode("abbccdddeeeeeeeeeeeeabbccdddeeeeeeeeeeee");
+    pair<vector<bitset<32>>, int> encodedtext = test.encode("abbccdddeeeeeeeeeeeeabbccdddeeeeeeeeeeee");
+    cout << test.decode(encodedtext) << endl;
 }
 
