@@ -1,2 +1,0 @@
-C:\Users\ilbov\Desktop\C++\Projects\MatrixMultiplication\Debug\MatrixMultiplication.exe
-C:\Users\ilbov\Desktop\C++\Projects\MatrixMultiplication\Debug\MatrixMultiplication.pdb
